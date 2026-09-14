@@ -3,30 +3,427 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banco Moderno - Bienvenida</title>
+    <title>Dashboard - ViaNet Educbol</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; }
-        header { background: #0a2540; color: #fff; display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; }
-        .logo { font-size: 24px; font-weight: bold; color: #00d4ff; }
-        .btn-login { background: #00d4ff; color: #0a2540; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; }
-        .hero { display: flex; align-items: center; justify-content: space-between; padding: 80px 50px; background: #fff; }
-        .hero-content { max-width: 500px; }
-        .hero-content h1 { font-size: 42px; color: #0a2540; margin-bottom: 20px; }
-        .hero-content p { font-size: 18px; color: #555; margin-bottom: 30px; }
-        .btn-cta { background: #0a2540; color: #fff; padding: 15px 30px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+        :root {
+            --primary-red: #d61c28;
+            --primary-dark: #1a252c;
+            --accent-gold: #f1a822;
+            --bg-light: #f4f6f9;
+            --white: #ffffff;
+            --text-muted: #7f8c8d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--primary-dark);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-dark);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-brand .logo-placeholder {
+            font-weight: bold;
+            font-size: 24px;
+            color: var(--white);
+        }
+
+        .sidebar-brand .logo-placeholder span {
+            color: var(--primary-red);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 24px 0;
+            flex-grow: 1;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            color: var(--white);
+            background-color: rgba(255,255,255,0.05);
+            border-left-color: var(--primary-red);
+        }
+
+        .sidebar-menu i {
+            margin-right: 12px;
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        /* Header Styling */
+        header {
+            background-color: var(--white);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            padding: 32px;
+        }
+
+        .welcome-box {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #2c3e50 100%);
+            color: var(--white);
+            padding: 32px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .welcome-box h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .welcome-box p {
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background-color: var(--white);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.01);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid transparent;
+        }
+
+        .stat-card:nth-child(1) { border-bottom-color: var(--primary-red); }
+        .stat-card:nth-child(2) { border-bottom-color: var(--accent-gold); }
+        .stat-card:nth-child(3) { border-bottom-color: #2ecc71; }
+        .stat-card:nth-child(4) { border-bottom-color: #3498db; }
+
+        .stat-info h3 {
+            font-size: 14px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .stat-info .number {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .stat-icon {
+            font-size: 32px;
+            opacity: 0.2;
+        }
+
+        /* Data Section */
+        .data-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .card {
+            background-color: var(--white);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.01);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Responsive Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .badge-success { background-color: #e8f8f0; color: #2ecc71; }
+        .badge-warning { background-color: #fef9e7; color: #f1a822; }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .data-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: absolute;
+                left: -100%;
+                top: 60px;
+                bottom: 0;
+            }
+            .sidebar.active {
+                left: 0;
+            }
+            header {
+                padding: 16px;
+                height: 60px;
+                border-bottom: 1px solid #edf2f7;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .dashboard-container {
+                padding: 16px;
+            }
+        }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">NeoBank</div>
-        <a href="#login" class="btn-login">Banca Digital</a>
-    </header>
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Tu dinero, más seguro y simple que nunca</h1>
-            <p>Experimenta la nueva banca digital. Gestiona tus cuentas, realiza transferencias y alcanza tus metas financieras sin complicaciones.</p>
-            <a href="#registro" class="btn-cta">Abrir Cuenta Digital</a>
+
+    <!-- Menú Lateral -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo-placeholder">via<span>net</span></div>
         </div>
-    </section>
+        <ul class="sidebar-menu">
+            <li><a href="#" class="active"><i class="fa-solid Nav-icon fa-chart-pie"></i> Panel Principal</a></li>
+            <li><a href="#"><i class="fa-solid fa-code"></i> Proyectos I+D</a></li>
+            <li><a href="#"><i class="fa-solid fa-server"></i> Servidores y Sistemas</a></li>
+            <li><a href="#"><i class="fa-solid fa-graduation-cap"></i> Módulos Educbol</a></li>
+            <li><a href="#"><i class="fa-solid fa-users"></i> Usuarios</a></li>
+            <li><a href="#"><i class="fa-solid fa-gear"></i> Configuración</a></li>
+        </ul>
+    </aside>
+
+    <!-- Contenido Principal -->
+    <main class="main-content">
+        <header>
+            <div class="menu-toggle" id="menuToggle">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+            <div class="search-box">
+                <!-- Espacio para buscador opcional -->
+            </div>
+            <div class="user-profile">
+                <span>Admin Educbol</span>
+                <div class="user-avatar">A</div>
+            </div>
+        </header>
+
+        <div class="dashboard-container">
+            <!-- Bienvenida -->
+            <div class="welcome-box">
+                <h1>Sistemas de Desarrollo Informático</h1>
+                <p>Bienvenido al centro de control tecnológico de Vianet Educbol. Monitorea proyectos, servidores y rendimiento global.</p>
+            </div>
+
+            <!-- Indicadores Rápidos -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Sistemas Activos</h3>
+                        <div class="number">12</div>
+                    </div>
+                    <i class="fa-solid fa-laptop-code stat-icon"></i>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Despliegues Hoy</h3>
+                        <div class="number">4</div>
+                    </div>
+                    <i class="fa-solid fa-cloud-arrow-up stat-icon"></i>
+                </div>
+                <div class="stat-card">
+                    <h3>Uso de Servidores</h3>
+                    <div class="number">42%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Alertas Críticas</h3>
+                        <div class="number">0</div>
+                    </div>
+                    <i class="fa-solid fa-triangle-exclamation stat-icon"></i>
+                </div>
+            </div>
+
+            <!-- Sección de Datos Detallados -->
+            <div class="data-section">
+                <!-- Tabla de Proyectos -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Estado de Desarrollos Recientes</div>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nombre del Sistema</th>
+                                    <th>Rama Principal</th>
+                                    <th>Estado</th>
+                                    <th>Último Cambio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Plataforma Educativa Educbol</td>
+                                    <td>main</td>
+                                    <td><span class="badge badge-success">Estable</span></td>
+                                    <td>Hace 10 min</td>
+                                </tr>
+                                <tr>
+                                    <td>Core API Vianet</td>
+                                    <td>production</td>
+                                    <td><span class="badge badge-success">Estable</span></td>
+                                    <td>Ayer</td>
+                                </tr>
+                                <tr>
+                                    <td>Módulo de Base de Datos v2</td>
+                                    <td>dev-testing</td>
+                                    <td><span class="badge badge-warning">En Pruebas</span></td>
+                                    <td>Hace 3 horas</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Actividad -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Registros Recientes</div>
+                    </div>
+                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 16px;">
+                        <li><i class="fa-solid fa-circle-check" style="color: #2ecc71; margin-right: 8px;"></i> Backup de BD completado</li>
+                        <li><i class="fa-solid fa-circle-info" style="color: #3498db; margin-right: 8px;"></i> Despliegue en contenedor exitoso</li>
+                        <li><i class="fa-solid fa-circle-check" style="color: #2ecc71; margin-right: 8px;"></i> SSL renovado automáticamente</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+    </script>
 </body>
 </html>
