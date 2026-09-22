@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViaNet Educbol - Dashboard</title>
+    <style>
+        :root {
+            --primary: #1e293b;
+            --secondary: #0f172a;
+            --accent: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --text-light: #f8fafc;
+            --text-dark: #334155;
+            --bg: #f1f5f9;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Menú Lateral */
+        nav {
+            width: 260px;
+            background-color: var(--primary);
+            color: var(--text-light);
+            padding: 2rem 1rem;
+            position: fixed;
+            height: 100vh;
+        }
+
+        nav h1 {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #334155;
+            color: #60a5fa;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        nav ul li a {
+            color: #cbd5e1;
+            text-decoration: none;
+            display: block;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            transition: all 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: var(--secondary);
+            color: var(--text-light);
+            padding-left: 1.5rem;
+        }
+
+        /* Contenedor Principal */
+        main {
+            margin-left: 260px;
+            flex-grow: 1;
+            padding: 2rem;
+            scroll-behavior: smooth;
+        }
+
+        header {
+            margin-bottom: 2rem;
+        }
+
+        header h2 {
+            font-size: 1.75rem;
+            color: var(--secondary);
+        }
+
+        header p {
+            color: #64748b;
+        }
+
+        /* Tarjetas de Métricas */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card h4 {
+            color: #64748b;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        /* Secciones */
+        section {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2.5rem;
+        }
+
+        /* Estilos específicos para la sección Clientes */
+        #clientes {
+            border-top: 4px solid var(--accent);
+            scroll-margin-top: 2rem; /* Evita que el título quede oculto bajo márgenes */
+        }
+
+        section h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Lista de Clientes Agregados */
+        .client-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .client-item {
+            background: #f8fafc;
+            padding: 1rem;
+            border-left: 4px solid #94a3b8;
+            border-radius: 0.25rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            transition: all 0.2s;
+        }
+
+        .client-item:hover {
+            border-left-color: var(--accent);
+            background: #eff6ff;
+            transform: translateY(-2px);
+        }
+
+        /* Tablas de Desarrollo */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: #64748b;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .badge.stable { background-color: #d1fae5; color: #065f46; }
+        .badge.testing { background-color: #fef3c7; color: #92400e; }
+
+        .log-list {
+            list-style: none;
+        }
+
+        .log-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #e2e8f0;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+        
+        .log-list li::before {
+            content: "• ";
+            color: var(--accent);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Menú Lateral de Navegación -->
+    <nav>
+        <h1>ViaNet Educbol</h1>
+        <ul>
+            <li><a href="#panel">Panel Principal</a></li>
+            <!-- Este enlace lleva directamente a la sección Clientes mediante el ID -->
+            <li><a href="#clientes">Clientes</a></li>
+            <li><a href="#sistemas">Servidores y Sistemas</a></li>
+        </ul>
+    </nav>
+
+    <!-- Contenido del Dashboard -->
+    <main>
+        <header id="panel">
+            <h2>Sistemas de Desarrollo Informático</h2>
+            <p>Bienvenido al centro de control tecnológico de Vianet Educbol. Monitorea proyectos, servidores y rendimiento global.</p>
+        </header>
+
+        <!-- Grilla de Métricas Globales -->
+        <div class="metrics-grid">
+            <div class="card">
+                <h4>Sistemas Activos</h4>
+                <div class="value">12</div>
+            </div>
+            <div class="card">
+                <h4>Despliegues Hoy</h4>
+                <div class="value">4</div>
+            </div>
+            <div class="card">
+                <h4>Uso de Servidores</h4>
+                <div class="value">42%</div>
+            </div>
+            <div class="card">
+                <h4>Alertas Críticas</h4>
+                <div class="value" style="color: var(--success);">0</div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN DE CLIENTES AGREGADOS -->
+        <section id="clientes">
+            <h3>👥 Control de Clientes Integrados</h3>
+            <div class="client-grid">
+                <div class="client-item">EAEN</div>
+                <div class="client-item">EIE</div>
+                <div class="client-item">CEC SHALOM</div>
+                <div class="client-item">REGION EL ALTO</div>
+                <div class="client-item">SEMINARIO EL ALTO</div>
+                <div class="client-item">SEMINARIO LA PAZ</div>
+                <div class="client-item">INEFBO</div>
+                <div class="client-item">DISTRITO LP</div>
+                <div class="client-item">LUZ Y VERDAD</div>
+                <div class="client-item">CP AMAUTA</div>
+                <div class="client-item">ESCUELA DE SARGENTOS</div>
+            </div>
+        </section>
+
+        <!-- Sección de Sistemas -->
+        <section id="sistemas">
+            <h3>🖥️ Estado de Desarrollos Recientes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre del Sistema</th>
+                        <th>Rama Principal</th>
+                        <th>Estado</th>
+                        <th>Último Cambio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Plataforma Educativa Educbol</strong></td>
+                        <td><code>main</code></td>
+                        <td><span class="badge stable">Estable</span></td>
+                        <td>Hace 10 min</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Core API Vianet</strong></td>
+                        <td><code>production</code></td>
+                        <td><span class="badge stable">Estable</span></td>
+                        <td>Ayer</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Módulo de Base de Datos v2</strong></td>
+                        <td><code>dev-testing</code></td>
+                        <td><span class="badge testing">En Pruebas</span></td>
+                        <td>Hace 3 horas</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Registros -->
+        <section>
+            <h3>📝 Registros Recientes</h3>
+            <ul class="log-list">
+                <li>Backup de BD completado</li>
+                <li>Despliegue en contenedor exitoso</li>
+                <li>SSL renovado automáticamente</li>
+            </ul>
+        </section>
+    </main>
+
+</body>
+</html>
